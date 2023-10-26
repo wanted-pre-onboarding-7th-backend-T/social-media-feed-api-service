@@ -6,6 +6,7 @@ import com.wanted.content.enums.SnsType;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,6 +32,9 @@ public class ContentsDetailsResponseDto {
     @JsonProperty("content")
     private String content;
 
+    @JsonProperty("hashtags")
+    private List<String> hashtags;
+
     @JsonProperty("view_count")
     private Long viewCount;
 
@@ -46,13 +50,14 @@ public class ContentsDetailsResponseDto {
     @JsonProperty("created_at")
     private LocalDateTime createdAt;
 
-    public static ContentsDetailsResponseDto toDto(Content content) {
+    public static ContentsDetailsResponseDto toDto(Content content, List<String> hashTags) {
         return ContentsDetailsResponseDto.builder()
             .id(content.getId())
             .contentSnsId(content.getContentSnsId())
             .type(content.getType())
             .title(content.getTitle())
             .content(content.getContent())
+            .hashtags(hashTags)
             .viewCount(content.getViewCount())
             .likeCount(content.getLikeCount())
             .shareCount(content.getShareCount())

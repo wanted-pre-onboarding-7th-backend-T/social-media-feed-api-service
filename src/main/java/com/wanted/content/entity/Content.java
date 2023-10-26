@@ -2,6 +2,7 @@ package com.wanted.content.entity;
 
 import com.wanted.common.BaseTime;
 import com.wanted.content.enums.SnsType;
+import com.wanted.hashtag.entity.ContentHashtag;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -10,6 +11,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,6 +44,9 @@ public class Content extends BaseTime {
     @Lob
     @Column(name = "content", columnDefinition = "TEXT", nullable = false)
     private String content;
+
+    @OneToMany(mappedBy = "content", orphanRemoval = true)
+    private List<ContentHashtag> hashtags = new ArrayList<>();
 
     @Column(name = "view_count", nullable = false)
     private Long viewCount;
