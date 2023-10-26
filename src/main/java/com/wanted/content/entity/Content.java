@@ -23,12 +23,12 @@ import lombok.NoArgsConstructor;
 public class Content extends BaseTime {
 
     @Id
-    @Column(name = "column_id", updatable = false)
+    @Column(name = "content_id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "content_sns_id", nullable = false)
-    private String contentSNSId;
+    private String contentSnsId;
 
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
