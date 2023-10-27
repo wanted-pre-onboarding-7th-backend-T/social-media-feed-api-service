@@ -1,7 +1,7 @@
-package com.wanted.user.annotation.validator;
+package com.wanted.user.validation.validator;
 
-import com.wanted.user.annotation.PasswordInfoSameValid;
 import com.wanted.user.dto.request.UserPostRequestDto;
+import com.wanted.user.validation.annotation.PasswordInfoSameValid;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

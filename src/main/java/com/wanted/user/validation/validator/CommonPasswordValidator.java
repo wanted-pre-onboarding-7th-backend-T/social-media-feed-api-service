@@ -1,7 +1,7 @@
-package com.wanted.user.annotation.validator;
+package com.wanted.user.validation.validator;
 
-import com.wanted.user.annotation.CommonPasswordValid;
-import com.wanted.user.annotation.utils.CommonPasswords;
+import com.wanted.user.validation.annotation.CommonPasswordValid;
+import com.wanted.user.validation.utils.CommonPasswords;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;

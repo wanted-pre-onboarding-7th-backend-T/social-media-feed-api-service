@@ -1,4 +1,4 @@
-package com.wanted.user.annotation.utils;
+package com.wanted.user.validation.utils;
 
 
 import java.util.Map;

@@ -1,7 +1,7 @@
 package com.wanted.user.dto.request;
 
-import com.wanted.user.annotation.CommonPasswordValid;
-import com.wanted.user.annotation.PasswordInfoSameValid;
+import com.wanted.user.validation.annotation.CommonPasswordValid;
+import com.wanted.user.validation.annotation.PasswordInfoSameValid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
