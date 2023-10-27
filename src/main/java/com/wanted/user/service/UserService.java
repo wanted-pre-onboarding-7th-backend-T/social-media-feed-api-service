@@ -1,5 +1,6 @@
 package com.wanted.user.service;
 
+import com.wanted.common.dto.ResponseDto;
 import com.wanted.common.exception.CommonException;
 import com.wanted.user.dto.request.UserPostRequestDto;
 import com.wanted.user.dto.response.UserIdResponseDto;
@@ -21,7 +22,7 @@ public class UserService {
     private final UserMapper mapper;
     private final PasswordEncoder encoder;
 
-    public UserIdResponseDto saveUser(UserPostRequestDto postDto) {
+    public ResponseDto<UserIdResponseDto> saveUser(UserPostRequestDto postDto) {
         validUsernameExist(postDto);
         postDto.setPassword(encoder.encode(postDto.getPassword()));
 

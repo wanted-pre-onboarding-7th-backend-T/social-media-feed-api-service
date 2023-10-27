@@ -10,7 +10,6 @@ import static org.mockito.BDDMockito.given;
 import com.wanted.common.exception.CommonException;
 import com.wanted.user.config.UserTestConfig;
 import com.wanted.user.dto.request.UserPostRequestDto;
-import com.wanted.user.dto.response.UserIdResponseDto;
 import com.wanted.user.entity.User;
 import com.wanted.user.mock.UserMock;
 import com.wanted.user.repository.UserRepository;
@@ -47,10 +46,10 @@ class UserServiceTest {
         given(repository.findByUserName(anyString())).willReturn(Optional.empty());
 
         // when
-        UserIdResponseDto result = userService.saveUser(post);
+        var result = userService.saveUser(post);
 
         // then
-        assertThat(result.getUserId()).isEqualTo(userMock.getUserId());
+        assertThat(result.getData().getUserId()).isEqualTo(userMock.getUserId());
     }
 
     @Test
