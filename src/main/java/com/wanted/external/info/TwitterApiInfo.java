@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class TwitterApiInfo implements SnsApiInfo {
 
+    //@Value("${twitter.api.like.method}")
+    private String likeMethod;
+
     //@Value("${twitter.api.like.endpoint}")
     private String likeEndpoint;
 

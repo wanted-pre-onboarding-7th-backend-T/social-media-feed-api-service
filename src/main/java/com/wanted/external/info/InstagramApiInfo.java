@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class InstagramApiInfo implements SnsApiInfo {
 
+    //@Value("${instagram.api.like.method}")
+    private String likeMethod;
+
     //@Value("${instagram.api.like.endpoint}")
     private String likeEndpoint;
 

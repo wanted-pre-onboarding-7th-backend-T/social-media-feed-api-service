@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class ThreadApiInfo implements SnsApiInfo {
 
+    //@Value("${thread.api.like.method}")
+    private String likeMethod;
+
     //@Value("${thread.api.like.endpoint}")
     private String likeEndpoint;
 

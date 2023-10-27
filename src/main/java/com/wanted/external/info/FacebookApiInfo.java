@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class FacebookApiInfo implements SnsApiInfo {
 
+    //@Value("${facebook.api.like.method}")
+    private String likeMethod;
+
     //@Value("${facebook.api.like.endpoint}")
     private String likeEndpoint;
 
