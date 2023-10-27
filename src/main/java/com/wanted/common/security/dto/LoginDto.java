@@ -1,9 +1,13 @@
 package com.wanted.common.security.dto;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class LoginDto {
     @NotNull
     private String username;
