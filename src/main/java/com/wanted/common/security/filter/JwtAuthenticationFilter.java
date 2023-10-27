@@ -1,8 +1,10 @@
 package com.wanted.common.security.filter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wanted.common.redis.repository.RedisRepository;
 import com.wanted.common.security.dto.LoginDto;
+import com.wanted.common.security.dto.UserInfo;
 import com.wanted.common.security.utils.JwtProperties;
 import com.wanted.common.security.utils.JwtProvider;
 import com.wanted.common.security.vo.Principal;
@@ -43,7 +45,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request,
             HttpServletResponse response,
             FilterChain chain,
-            Authentication authResult) {
+            Authentication authResult) throws JsonProcessingException {
         Principal principal = (Principal) authResult.getPrincipal();
 
         String accessToken =
@@ -51,13 +53,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                         toTrans(principal.getAuthorities()));
         String refreshToken = jwtProvider.generateRefreshToken(principal.getUsername());
 
-        repository.save(refreshToken, principal.getUsername(), jwtProperties.getRefreshTokenValidityInSeconds());
+        repository.save(refreshToken, transSaveData(principal), jwtProperties.getRefreshTokenValidityInSeconds());
         response.setHeader(HttpHeaders.AUTHORIZATION, jwtProperties.getPrefix() + " " + accessToken);
         response.addCookie(createCookie(refreshToken));
     }
 
-    private LoginDto toTransDto(HttpServletRequest request) throws IOException {
-        return objectMapper.readValue(request.getInputStream(), LoginDto.class);
+    private String transSaveData(Principal principal) throws JsonProcessingException {
+        return objectMapper.writeValueAsString(createUserInfo(principal));
+    }
+
+    private UserInfo createUserInfo(Principal principal) {
+        return new UserInfo(principal.getUsername(), toTrans(principal.getAuthorities()));
     }
 
     private UsernamePasswordAuthenticationToken createAuthenticationToken(LoginDto login) {
@@ -78,5 +84,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         StringBuilder sb = new StringBuilder();
         list.forEach(data -> sb.append(data).append(","));
         return sb.deleteCharAt(sb.length() - 1).toString();
+    }
+
+    private LoginDto toTransDto(HttpServletRequest request) throws IOException {
+        return objectMapper.readValue(request.getInputStream(), LoginDto.class);
     }
 }
