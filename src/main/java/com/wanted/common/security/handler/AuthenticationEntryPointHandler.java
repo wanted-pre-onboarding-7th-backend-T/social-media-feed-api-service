@@ -22,10 +22,6 @@ public class AuthenticationEntryPointHandler implements AuthenticationEntryPoint
 
     private final ObjectMapper objectMapper;
 
-    private static ErrorResponse createErrorResponse(AuthExceptionCode authExceptionCode) {
-        return ErrorResponse.of(authExceptionCode.getHttpStatus(), authExceptionCode.getMessage());
-    }
-
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException authException) throws IOException, ServletException {
@@ -51,6 +47,9 @@ public class AuthenticationEntryPointHandler implements AuthenticationEntryPoint
         return objectMapper.writeValueAsString(createErrorResponse(authExceptionCode));
     }
 
+    private ErrorResponse createErrorResponse(AuthExceptionCode authExceptionCode) {
+        return ErrorResponse.of(authExceptionCode.getHttpStatus(), authExceptionCode.getMessage());
+    }
 }
 
 

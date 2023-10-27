@@ -18,11 +18,6 @@ import org.springframework.stereotype.Component;
 public class LogoutSuccessCustomHandler implements LogoutSuccessHandler {
     private final RedisRepository repository;
 
-    private static void createResponse(HttpServletResponse response) throws IOException {
-        response.setStatus(HttpStatus.OK.value());
-        response.getWriter().flush();
-    }
-
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException {
@@ -53,4 +48,10 @@ public class LogoutSuccessCustomHandler implements LogoutSuccessHandler {
     private void deleteCookie(Cookie cookie) {
         cookie.setMaxAge(0);
     }
+
+    private static void createResponse(HttpServletResponse response) throws IOException {
+        response.setStatus(HttpStatus.OK.value());
+        response.getWriter().flush();
+    }
+
 }
