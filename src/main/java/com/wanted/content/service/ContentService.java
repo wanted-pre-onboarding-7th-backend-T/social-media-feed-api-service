@@ -20,8 +20,9 @@ public class ContentService {
 
     public ResponseDto<ContentLikeResponseDto> increaseLikeCount(Long contentId) {
         Content content = getContent(contentId);
+        String contentSnsId = content.getContentSnsId();
         SnsType type = content.getType();
-        snsApiService.callLikeApi(contentId, type); //외부 API 호출
+        snsApiService.callLikeApi(contentSnsId, type); //외부 API 호출
         Long increasedLikeCount = content.getLikeCount() + 1;
         return new ResponseDto<>(200, HttpStatus.OK.name(),
             new ContentLikeResponseDto(contentId, increasedLikeCount));
