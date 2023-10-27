@@ -1,7 +1,7 @@
 package com.wanted.content.controller;
 
 import com.wanted.common.dto.ResponseDto;
-import com.wanted.content.dto.ContentLikeResponseDto;
+import com.wanted.content.dto.response.ContentLikeResponseDto;
 import com.wanted.content.service.ContentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
