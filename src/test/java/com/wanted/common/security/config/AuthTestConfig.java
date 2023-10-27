@@ -13,13 +13,13 @@ import com.wanted.user.mock.UserMock;
 import com.wanted.user.repository.UserRepository;
 import com.wanted.user.service.UserService;
 import org.mockito.Mockito;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Configuration
+@TestConfiguration
 public class AuthTestConfig {
 
     @Bean
