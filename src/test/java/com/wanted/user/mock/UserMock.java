@@ -1,6 +1,7 @@
 package com.wanted.user.mock;
 
 import com.wanted.common.security.dto.LoginDto;
+import com.wanted.common.security.dto.UserInfo;
 import com.wanted.user.dto.request.UserPostRequestDto;
 import com.wanted.user.entity.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,6 +44,10 @@ public class UserMock {
 
     public LoginDto wrongLoginMock() {
         return new LoginDto(username,wrongPassword);
+    }
+
+    public UserInfo userInfoMock() {
+        return new UserInfo(username,"ROLE_USER");
     }
 
     public Long getUserId() {
