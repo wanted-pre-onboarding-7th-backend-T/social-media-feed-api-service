@@ -70,7 +70,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/api/auth/reissue");
-        cookie.setMaxAge(60 * 200);
+        cookie.setMaxAge(60 * jwtProperties.getRefreshTokenValidityInSeconds());
         return cookie;
     }
 
