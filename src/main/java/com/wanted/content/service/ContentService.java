@@ -10,6 +10,7 @@ import com.wanted.external.service.SnsApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +29,8 @@ public class ContentService {
             new ContentLikeResponseDto(contentId, increasedLikeCount));
     }
 
-    private Content getContent(Long contentId) {
+    @Transactional(readOnly = true)
+    public Content getContent(Long contentId) {
         return contentRepository.findById(contentId)
             .orElseThrow(() -> new CommonException(HttpStatus.NOT_FOUND, "해당 게시물이 존재하지 않습니다."));
     }
