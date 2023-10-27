@@ -19,12 +19,17 @@ public class ContentService {
     private final SnsApiService snsApiService;
     private final ContentRepository contentRepository;
 
+    @Transactional
     public ResponseDto<ContentLikeResponseDto> increaseLikeCount(Long contentId) {
         Content content = getContent(contentId);
         String contentSnsId = content.getContentSnsId();
         SnsType type = content.getType();
-        snsApiService.callLikeApi(contentSnsId, type); //외부 API 호출
-        Long increasedLikeCount = content.getLikeCount() + 1;
+
+        Long increasedLikeCount = snsApiService.callLikeApi(contentSnsId, type)
+            .onErrorReturn(content.getLikeCount())
+            .block(); //Blocking & Synchronous
+        content.updateLikeCount(increasedLikeCount);
+
         return new ResponseDto<>(200, HttpStatus.OK.name(),
             new ContentLikeResponseDto(contentId, increasedLikeCount));
     }
