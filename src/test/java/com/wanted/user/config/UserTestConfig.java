@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class UserTestConfig {
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -34,6 +35,6 @@ public class UserTestConfig {
 
     @Bean
     public UserService userService() {
-        return new UserService(userRepository(),userMapper(),passwordEncoder());
+        return new UserService(userRepository(), userMapper(), passwordEncoder());
     }
 }

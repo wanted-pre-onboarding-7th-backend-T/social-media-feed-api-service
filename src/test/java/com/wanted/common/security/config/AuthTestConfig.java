@@ -11,6 +11,7 @@ import com.wanted.common.security.utils.JwtProperties;
 import com.wanted.common.security.utils.JwtProvider;
 import com.wanted.user.mock.UserMock;
 import com.wanted.user.repository.UserRepository;
+import com.wanted.user.service.UserService;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class AuthTestConfig {
+
     @Bean
     public JwtProvider jwtProvider() {
         return new JwtProvider(jwtProperties());
@@ -62,7 +64,12 @@ public class AuthTestConfig {
 
     @Bean
     public AuthService authService() {
-        return new AuthService(redisRepository(),jwtProvider(),userRepository(),objectMapper());
+        return new AuthService(redisRepository(), jwtProvider(), userRepository(), objectMapper());
+    }
+
+    @Bean
+    public UserService userService() {
+        return Mockito.mock(UserService.class);
     }
 
     @Bean
