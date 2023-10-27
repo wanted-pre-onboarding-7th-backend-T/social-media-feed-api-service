@@ -45,6 +45,11 @@ public class JwtProvider {
                 .getPayload();
     }
 
+    public Integer getRefreshTokenValidityInSeconds(){
+        return jwtProperties.getRefreshTokenValidityInSeconds();
+    }
+
+
     private Date getAccessExpiration() {
         return addExpirationData(jwtProperties.getAccessTokenValidityInSeconds()).getTime();
     }
