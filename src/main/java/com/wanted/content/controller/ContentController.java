@@ -4,7 +4,6 @@ import com.wanted.common.dto.ResponseDto;
 import com.wanted.content.dto.response.ContentLikeResponseDto;
 import com.wanted.content.service.ContentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +18,6 @@ public class ContentController {
 
     @PostMapping("/{contentId}/likes")
     public ResponseDto<ContentLikeResponseDto> increaseLikeCount(@PathVariable Long contentId) {
-        Long likeCount = contentService.increaseLikeCount(contentId);
-        return new ResponseDto<>(200, HttpStatus.OK.name(),
-            new ContentLikeResponseDto(contentId, likeCount));
+        return contentService.increaseLikeCount(contentId);
     }
 }

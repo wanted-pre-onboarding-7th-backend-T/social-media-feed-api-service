@@ -1,6 +1,8 @@
 package com.wanted.content.service;
 
+import com.wanted.common.dto.ResponseDto;
 import com.wanted.common.exception.CommonException;
+import com.wanted.content.dto.response.ContentLikeResponseDto;
 import com.wanted.content.entity.Content;
 import com.wanted.content.enums.SnsType;
 import com.wanted.content.repository.ContentRepository;
@@ -16,11 +18,13 @@ public class ContentService {
     private final SnsApiService snsApiService;
     private final ContentRepository contentRepository;
 
-    public Long increaseLikeCount(Long contentId) {
+    public ResponseDto<ContentLikeResponseDto> increaseLikeCount(Long contentId) {
         Content content = getContent(contentId);
         SnsType type = content.getType();
         snsApiService.callLikeApi(contentId, type); //외부 API 호출
-        return content.getLikeCount() + 1;
+        Long increasedLikeCount = content.getLikeCount() + 1;
+        return new ResponseDto<>(200, HttpStatus.OK.name(),
+            new ContentLikeResponseDto(contentId, increasedLikeCount));
     }
 
     private Content getContent(Long contentId) {
