@@ -3,6 +3,7 @@ package com.wanted.common.security.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wanted.common.redis.repository.RedisRepository;
 import com.wanted.common.security.dto.LoginDto;
+import com.wanted.common.security.utils.JwtProperties;
 import com.wanted.common.security.utils.JwtProvider;
 import com.wanted.common.security.vo.Principal;
 import jakarta.servlet.FilterChain;
@@ -28,6 +29,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final JwtProvider jwtProvider;
     private final ObjectMapper objectMapper;
     private final RedisRepository repository;
+    private final JwtProperties jwtProperties;
 
     @SneakyThrows
     @Override
@@ -49,8 +51,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                         toTrans(principal.getAuthorities()));
         String refreshToken = jwtProvider.generateRefreshToken(principal.getUsername());
 
-        repository.save(refreshToken, principal.getUsername(), 200);
-        response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
+        repository.save(refreshToken, principal.getUsername(), jwtProperties.getRefreshTokenValidityInSeconds());
+        response.setHeader(HttpHeaders.AUTHORIZATION, jwtProperties.getPrefix() + " " + accessToken);
         response.addCookie(createCookie(refreshToken));
     }
 
