@@ -3,6 +3,8 @@ package com.wanted.common.redis.repository;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wanted.common.security.dto.UserInfo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,22 +18,26 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @DataRedisTest
 @MockBean(JpaMetamodelMappingContext.class)
-@Import({RedisRepository.class})
+@Import({RedisRepository.class, ObjectMapper.class})
 class RedisRepositoryTest {
     @Autowired
     RedisRepository repository;
-
+    @Autowired
+    ObjectMapper objectMapper;
     @Test
     @DisplayName("레디스 저장 테스트")
     void save_test() throws Exception{
         // given
         String key = "Test";
-        String value = "Test";
+//        String value = "Test";
+        UserInfo data = new UserInfo("test", "TEST");
+        String value = objectMapper.writeValueAsString(data);
         repository.save(key, value,10);
         // when
-        String result = repository.findByKey(key);
+        UserInfo result = objectMapper.readValue(repository.findByKey(key), UserInfo.class);
         // then
-        assertThat(result).isEqualTo(value);
+        assertThat(result).isInstanceOf(UserInfo.class);
+        assertThat(result.getUserName()).isEqualTo(data.getUserName());
     }
 
     @Test
@@ -43,8 +49,22 @@ class RedisRepositoryTest {
         // when
         repository.save(key,value,10);
         repository.delete(key);
-        String result = repository.findByKey(key);
+        Object result = repository.findByKey(key);
         // then
         assertThat(result).isNull();
+    }
+    @Test
+    @DisplayName("레디스 동일한 key값에 value 연속 저장")
+    void save_and_save_test() throws Exception{
+        // given
+        String key = "Test001";
+        String value = "Test";
+        // when
+        repository.save(key,value,10);
+        value = "answerTest";
+        repository.save(key,value,10);
+        Object result = repository.findByKey(key);
+        // then
+        assertThat(result).isEqualTo(value);
     }
 }
