@@ -3,20 +3,15 @@ package com.wanted.external.info;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 
-@Getter
 @Component
 public class TwitterApiInfo implements SnsApiInfo {
 
-    //@Value("${twitter.api.like.method}")
-    private String likeMethod;
+    @Getter
+    @Value("${twitter.api.endpoint:}")
+    private String endpoint;
 
-    //@Value("${twitter.api.like.endpoint}")
-    private String likeEndpoint;
-
-    //@Value("${twitter.api.key}")
-    private String key;
-
-    //@Value("${twitter.api.key.name}")
-    private String keyName;
+    @Value("#{${twitter.api.keys:{ : }}}")
+    private MultiValueMap<String, String> keys;
 }

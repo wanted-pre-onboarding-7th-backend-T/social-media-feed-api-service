@@ -3,20 +3,15 @@ package com.wanted.external.info;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 
-@Getter
 @Component
 public class ThreadApiInfo implements SnsApiInfo {
 
-    //@Value("${thread.api.like.method}")
-    private String likeMethod;
+    @Getter
+    @Value("${thread.api.endpoint:}")
+    private String endpoint;
 
-    //@Value("${thread.api.like.endpoint}")
-    private String likeEndpoint;
-
-    //@Value("${thread.api.key}")
-    private String key;
-
-    //@Value("${thread.api.key.name}")
-    private String keyName;
+    @Value("#{${thread.api.keys:{ : }}}")
+    private MultiValueMap<String, String> keys;
 }
