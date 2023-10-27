@@ -1,10 +1,9 @@
 package com.wanted.common.security.vo;
 
 import io.jsonwebtoken.Claims;
-import java.util.Collection;
 import java.util.List;
 import lombok.Getter;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
@@ -18,7 +17,7 @@ public class Principal extends User {
     }
 
     public Principal(Claims claims) {
-        super(claims.getSubject(), "", (Collection<? extends GrantedAuthority>)claims.get("authorities"));
+        super(claims.getSubject(), "", AuthorityUtils.commaSeparatedStringToAuthorityList(claims.get("authorities",String.class)));
         this.id = claims.get("id",Long.class);
     }
 }
