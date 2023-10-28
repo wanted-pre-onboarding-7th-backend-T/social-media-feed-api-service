@@ -1,8 +1,12 @@
 package com.wanted.external.info;
 
+import java.util.Optional;
+
 public interface SnsApiInfo {
 
     String getEndpoint();
 
-    ApiSpec getLikeApiSpec(String contentSnsId);
+    default Optional<ApiSpec> getLikeApiSpec(String contentSnsId) {
+        return Optional.empty();
+    }
 }

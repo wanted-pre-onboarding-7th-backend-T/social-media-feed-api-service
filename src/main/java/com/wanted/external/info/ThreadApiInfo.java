@@ -1,5 +1,6 @@
 package com.wanted.external.info;
 
+import java.util.Optional;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
@@ -17,7 +18,7 @@ public class ThreadApiInfo implements SnsApiInfo {
     private MultiValueMap<String, String> keys;
 
     @Override
-    public ApiSpec getLikeApiSpec(String contentSnsId) {
-        return new ApiSpec(HttpMethod.POST, "/likes/" + contentSnsId, keys);
+    public Optional<ApiSpec> getLikeApiSpec(String contentSnsId) {
+        return Optional.of(new ApiSpec(HttpMethod.POST, "/likes/" + contentSnsId, keys));
     }
 }
