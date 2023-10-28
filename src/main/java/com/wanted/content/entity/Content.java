@@ -53,4 +53,8 @@ public class Content extends BaseTime {
     public void updateLikeCount(Long likeCount) {
         this.likeCount = likeCount;
     }
+
+    public void updateShareCount(Long shareCount) {
+        this.shareCount = shareCount;
+    }
 }
