@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
@@ -21,7 +20,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import reactor.core.publisher.Mono;
 
 @ExtendWith(MockitoExtension.class)
 class ContentServiceTest {
@@ -43,38 +41,15 @@ class ContentServiceTest {
         Content content = Content.builder().id(1L).contentSnsId("abc")
             .type(SnsType.FACEBOOK).likeCount(5L).build();
         given(contentRepository.findById(anyLong())).willReturn(Optional.of(content));
-        given(snsApiService.callLikeApi(anyString(), any(SnsType.class)))
-            .willReturn(Mono.just(increasedLikeCount));
+        given(snsApiService.callLikeApi(any(Content.class))).willReturn(increasedLikeCount);
 
         //when
         contentService.increaseLikeCount(content.getId());
 
         //then
         then(contentRepository).should(times(1)).findById(content.getId());
-        then(snsApiService).should(times(1))
-            .callLikeApi(content.getContentSnsId(), content.getType());
+        then(snsApiService).should(times(1)).callLikeApi(content);
         assertThat(content.getLikeCount()).isEqualTo(increasedLikeCount);
-    }
-
-    @DisplayName("게시물 좋아요 테스트 : 실패")
-    @Test
-    void increaseLikeCountFail() {
-        //given
-        Long originLikeCount = 5L;
-        Content content = Content.builder().id(1L).contentSnsId("abc")
-            .type(SnsType.FACEBOOK).likeCount(originLikeCount).build();
-        given(contentRepository.findById(anyLong())).willReturn(Optional.of(content));
-        given(snsApiService.callLikeApi(anyString(), any(SnsType.class)))
-            .willReturn(Mono.error(new RuntimeException()));
-
-        //when
-        contentService.increaseLikeCount(content.getId());
-
-        //then
-        then(contentRepository).should(times(1)).findById(content.getId());
-        then(snsApiService).should(times(1))
-            .callLikeApi(content.getContentSnsId(), content.getType());
-        assertThat(content.getLikeCount()).isEqualTo(originLikeCount);
     }
 
     @DisplayName("게시물 엔티티 조회 테스트 : 실패")

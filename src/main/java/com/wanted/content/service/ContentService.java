@@ -4,7 +4,6 @@ import com.wanted.common.dto.ResponseDto;
 import com.wanted.common.exception.CommonException;
 import com.wanted.content.dto.response.ContentLikeResponseDto;
 import com.wanted.content.entity.Content;
-import com.wanted.content.enums.SnsType;
 import com.wanted.content.repository.ContentRepository;
 import com.wanted.external.service.SnsApiService;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +21,8 @@ public class ContentService {
     @Transactional
     public ResponseDto<ContentLikeResponseDto> increaseLikeCount(Long contentId) {
         Content content = getContent(contentId);
-        String contentSnsId = content.getContentSnsId();
-        SnsType type = content.getType();
-
-        Long increasedLikeCount = snsApiService.callLikeApi(contentSnsId, type)
-            .onErrorReturn(content.getLikeCount())
-            .block(); //Blocking & Synchronous
+        Long increasedLikeCount = snsApiService.callLikeApi(content);
         content.updateLikeCount(increasedLikeCount);
-
         return new ResponseDto<>(200, HttpStatus.OK.name(),
             new ContentLikeResponseDto(contentId, increasedLikeCount));
     }
