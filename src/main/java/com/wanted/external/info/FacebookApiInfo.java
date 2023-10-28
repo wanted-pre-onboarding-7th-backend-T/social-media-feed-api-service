@@ -21,4 +21,9 @@ public class FacebookApiInfo implements SnsApiInfo {
     public Optional<ApiSpec> getLikeApiSpec(String contentSnsId) {
         return Optional.of(new ApiSpec(HttpMethod.POST, "/likes/" + contentSnsId, keys));
     }
+
+    @Override
+    public Optional<ApiSpec> getShareApiSpec(String contentSnsId) {
+        return Optional.of(new ApiSpec(HttpMethod.POST, "/share/" + contentSnsId, keys));
+    }
 }

@@ -9,4 +9,8 @@ public interface SnsApiInfo {
     default Optional<ApiSpec> getLikeApiSpec(String contentSnsId) {
         return Optional.empty();
     }
+
+    default Optional<ApiSpec> getShareApiSpec(String contentSnsId) {
+        return Optional.empty();
+    }
 }
