@@ -1,5 +1,7 @@
-package com.wanted.external.info;
+package com.wanted.external.info.impl;
 
+import com.wanted.external.info.ApiSpec;
+import com.wanted.external.info.SnsApiInfo;
 import java.util.Optional;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,13 +10,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 
 @Component
-public class InstagramApiInfo implements SnsApiInfo {
+public class ThreadApiInfo implements SnsApiInfo {
 
     @Getter
-    @Value("${instagram.api.endpoint:}")
+    @Value("${thread.api.endpoint:}")
     private String endpoint;
 
-    @Value("#{${instagram.api.keys:{ : }}}")
+    @Value("#{${thread.api.keys:{ : }}}")
     private MultiValueMap<String, String> keys;
 
     @Override
