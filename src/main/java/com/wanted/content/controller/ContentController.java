@@ -5,6 +5,7 @@ import com.wanted.content.dto.response.ContentLikeResponseDto;
 import com.wanted.content.dto.response.ContentShareResponseDto;
 import com.wanted.content.service.ContentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,12 +19,14 @@ public class ContentController {
     private final ContentService contentService;
 
     @PostMapping("/{contentId}/likes")
-    public ResponseDto<ContentLikeResponseDto> increaseLikeCount(@PathVariable Long contentId) {
-        return contentService.increaseLikeCount(contentId);
+    public ResponseEntity<ResponseDto<ContentLikeResponseDto>> increaseLikeCount(@PathVariable Long contentId) {
+        ResponseDto<ContentLikeResponseDto> result = contentService.increaseLikeCount(contentId);
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/{contentId}/share")
-    public ResponseDto<ContentShareResponseDto> increaseShareCount(@PathVariable Long contentId) {
-        return contentService.increaseShareCount(contentId);
+    public ResponseEntity<ResponseDto<ContentShareResponseDto>> increaseShareCount(@PathVariable Long contentId) {
+        ResponseDto<ContentShareResponseDto> result = contentService.increaseShareCount(contentId);
+        return ResponseEntity.ok(result);
     }
 }
