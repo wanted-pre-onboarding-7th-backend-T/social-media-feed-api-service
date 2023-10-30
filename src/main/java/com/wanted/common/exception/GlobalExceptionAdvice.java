@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionAdvice {
 
     @ExceptionHandler
-    public ResponseEntity handleBusinessException(CommonException e) {
+    public ResponseEntity<ErrorResponse> handleBusinessException(CommonException e) {
         log.error("BusinessLogic Exception Error : {}", e.getMessage());
         final ErrorResponse errorResponse = ErrorResponse.of(e.getHttpStatus());
-        return new ResponseEntity(errorResponse, e.getHttpStatus());
+        return new ResponseEntity<>(errorResponse, e.getHttpStatus());
     }
 
     /*

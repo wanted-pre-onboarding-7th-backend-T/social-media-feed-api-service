@@ -16,7 +16,7 @@ public class AuthController {
     private final AuthService service;
 
     @PostMapping("/reissue")
-    public ResponseEntity reissue(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<Void> reissue(HttpServletRequest request, HttpServletResponse response) {
         service.reissue(request, response);
         return ResponseEntity.noContent().build();
     }
