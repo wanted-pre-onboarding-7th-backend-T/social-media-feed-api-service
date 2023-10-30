@@ -24,7 +24,7 @@ public class ContentService {
         Content content = getContent(contentId);
         Long increasedLikeCount = snsApiService.callLikeApi(content);
         content.updateLikeCount(increasedLikeCount);
-        return new ResponseDto<>(200, HttpStatus.OK.name(),
+        return new ResponseDto<>(200, "성공적으로 게시물을 좋아요 하였습니다.",
             new ContentLikeResponseDto(contentId, increasedLikeCount));
     }
 
@@ -33,7 +33,7 @@ public class ContentService {
         Content content = getContent(contentId);
         Long increasedShareCount = snsApiService.callShareApi(content);
         content.updateShareCount(increasedShareCount);
-        return new ResponseDto<>(200, HttpStatus.OK.name(),
+        return new ResponseDto<>(200, "성공적으로 게시물을 공유하였습니다.",
             new ContentShareResponseDto(contentId, increasedShareCount));
     }
 
