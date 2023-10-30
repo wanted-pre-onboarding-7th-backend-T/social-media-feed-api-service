@@ -35,6 +35,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @Import({AuthTestConfig.class, SecurityConfig.class})
 @MockBean(JpaMetamodelMappingContext.class)
 class AuthControllerTest {
+
     @Autowired
     MockMvc mvc;
     @Autowired
@@ -47,9 +48,10 @@ class AuthControllerTest {
     UserRepository repository;
     @MockBean
     RedisRepository redis;
+
     @Test
     @DisplayName("로그인 테스트 : 성공")
-    void login_success_test() throws Exception{
+    void login_success_test() throws Exception {
         // given
         LoginDto login = userMock.loginMock();
         User mockEntity = userMock.entityMock();
@@ -67,9 +69,10 @@ class AuthControllerTest {
                 .andExpect(MockMvcResultMatchers.header().exists(HttpHeaders.AUTHORIZATION))
                 .andExpect(MockMvcResultMatchers.cookie().exists("Refresh"));
     }
+
     @Test
     @DisplayName("로그인 테스트 : 실패")
-    void login_failure_test() throws Exception{
+    void login_failure_test() throws Exception {
         // given
         LoginDto login = userMock.wrongLoginMock();
         User mockEntity = userMock.entityMock();
@@ -85,16 +88,17 @@ class AuthControllerTest {
         perform
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
+
     @Test
     @DisplayName("토큰 갱신 테스트 : 성공")
-    void reissue_success_test() throws Exception{
+    void reissue_success_test() throws Exception {
         // given
         User mockEntity = userMock.entityMock();
         String mockString = objectMapper.writeValueAsString(userMock.userInfoMock());
 
         given(repository.findByUserName(anyString())).willReturn(Optional.of(mockEntity));
         given(redis.findByKey(anyString())).willReturn(mockString);
-        willDoNothing().given(redis).save(anyString(),anyString(),anyInt());
+        willDoNothing().given(redis).save(anyString(), anyString(), anyInt());
         // when
         ResultActions perform = mvc.perform(
                 MockMvcRequestBuilders.post("/api/auth/reissue").cookie(createCookie()));
@@ -107,13 +111,13 @@ class AuthControllerTest {
 
     @Test
     @DisplayName("토큰 갱신 테스트 : 실패 [저장된 데이터가 없을 때]")
-    void reissue_failure_data_not_exist_test() throws Exception{
+    void reissue_failure_data_not_exist_test() throws Exception {
         // given
         User mockEntity = userMock.entityMock();
 
         given(repository.findByUserName(anyString())).willReturn(Optional.of(mockEntity));
         given(redis.findByKey(anyString())).willReturn(null);
-        willDoNothing().given(redis).save(anyString(),anyString(),anyInt());
+        willDoNothing().given(redis).save(anyString(), anyString(), anyInt());
         // when
         ResultActions perform = mvc.perform(
                 MockMvcRequestBuilders.post("/api/auth/reissue").cookie(createCookie()));
@@ -124,14 +128,14 @@ class AuthControllerTest {
 
     @Test
     @DisplayName("토큰 갱신 테스트 : 실패 [쿠키가 없을 때]")
-    void reissue_failure_cookie_not_exist_test() throws Exception{
+    void reissue_failure_cookie_not_exist_test() throws Exception {
         // given
         User mockEntity = userMock.entityMock();
         String mockString = objectMapper.writeValueAsString(userMock.userInfoMock());
 
         given(repository.findByUserName(anyString())).willReturn(Optional.of(mockEntity));
         given(redis.findByKey(anyString())).willReturn(mockString);
-        willDoNothing().given(redis).save(anyString(),anyString(),anyInt());
+        willDoNothing().given(redis).save(anyString(), anyString(), anyInt());
         // when
         ResultActions perform = mvc.perform(
                 MockMvcRequestBuilders.post("/api/auth/reissue"));
@@ -140,7 +144,7 @@ class AuthControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
-    private Cookie createCookie(){
-        return new Cookie("Refresh",jwtProvider.generateRefreshToken(userMock.getUsername()));
+    private Cookie createCookie() {
+        return new Cookie("Refresh", jwtProvider.generateRefreshToken(userMock.getUsername()));
     }
 }
