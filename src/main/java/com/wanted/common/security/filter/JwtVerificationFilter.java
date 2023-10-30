@@ -45,18 +45,17 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return !checkAuthenticationExist(request) || !checkAuthenticationBearerExist(request);
+        return !validAuthorizationHeader(request);
     }
 
     private String getAuthenticationTokenToHeader(HttpServletRequest request) {
         return request.getHeader(HttpHeaders.AUTHORIZATION);
     }
 
-    private boolean checkAuthenticationExist(HttpServletRequest request) {
-        return getAuthenticationTokenToHeader(request) != null;
-    }
-    private boolean checkAuthenticationBearerExist(HttpServletRequest request) {
-        return getAuthenticationTokenToHeader(request).startsWith(jwtProperties.getPrefix());
+    private boolean validAuthorizationHeader(HttpServletRequest request) {
+        String authorizationHeader = getAuthenticationTokenToHeader(request);
+        return authorizationHeader != null && authorizationHeader.startsWith(
+                jwtProperties.getPrefix());
     }
 
     private void setAuthenticationToContext(HttpServletRequest request) {
