@@ -28,7 +28,7 @@ class JwtPropertiesTest {
         // when
         // then
         assertAll(
-                  () -> assertThat(jwtProperties.getPrefix()).isEqualTo("Bearer")
+                  () -> assertThat(jwtProperties.getPrefix()).isEqualTo("Bearer ")
                 , () -> assertThat(jwtProperties.getAccessTokenValidityInSeconds()).isNotZero()
                 , () -> assertThat(jwtProperties.getRefreshTokenValidityInSeconds()).isNotZero()
                 , () -> assertThat(jwtProperties.getSecretKey()).isNotEmpty());
