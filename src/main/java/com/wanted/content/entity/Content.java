@@ -60,4 +60,8 @@ public class Content extends BaseTime {
     public void updateViewCount(Long viewCount) {
         this.viewCount = viewCount;
     }
+
+    public void saveHashTags(List<ContentHashtag> contentHashtags) {
+        this.hashtags = contentHashtags;
+    }
 }
