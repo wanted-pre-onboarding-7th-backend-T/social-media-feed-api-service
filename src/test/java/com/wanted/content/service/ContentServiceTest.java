@@ -39,27 +39,7 @@ class ContentServiceTest {
         Long contentId = 1L;
         Long viewCount = 0L;
 
-        HashTag hashTag1 = new HashTag(1L, "hashtag1");
-        HashTag hashTag2 = new HashTag(2L, "hashtag2");
-        HashTag hashTag3 = new HashTag(3L, "hashtag3");
-
-        Content content = Content.builder()
-            .id(contentId)
-            .contentSnsId("contentSnsId")
-            .type(SnsType.FACEBOOK)
-            .title("title")
-            .content("content")
-            .likeCount(0L)
-            .viewCount(viewCount)
-            .likeCount(0L)
-            .shareCount(0L)
-            .build();
-        List<ContentHashtag> contentHashtagList = List.of(
-            new ContentHashtag(1L, content, hashTag1),
-            new ContentHashtag(1L, content, hashTag2),
-            new ContentHashtag(1L, content, hashTag3));
-
-        content.saveHashTags(contentHashtagList);
+        Content content = makeContent(contentId, viewCount);
 
         given(contentRepository.findById(contentId)).willReturn(Optional.of(content));
 
@@ -83,5 +63,30 @@ class ContentServiceTest {
         assertThatThrownBy(() -> contentService.findContentDetails(notExistContentId))
             .isInstanceOf(CommonException.class)
             .hasMessage("해당 게시물이 존재하지 않습니다..");
+    }
+
+    private Content makeContent(Long contentId, Long viewCount) {
+        HashTag hashTag1 = new HashTag(1L, "hashtag1");
+        HashTag hashTag2 = new HashTag(2L, "hashtag2");
+        HashTag hashTag3 = new HashTag(3L, "hashtag3");
+
+        Content content = Content.builder()
+            .id(contentId)
+            .contentSnsId("contentSnsId")
+            .type(SnsType.FACEBOOK)
+            .title("title" + contentId)
+            .content("content" + contentId)
+            .likeCount(0L)
+            .viewCount(viewCount)
+            .likeCount(0L)
+            .shareCount(0L)
+            .build();
+        List<ContentHashtag> contentHashtagList = List.of(
+            new ContentHashtag(1L, content, hashTag1),
+            new ContentHashtag(2L, content, hashTag2),
+            new ContentHashtag(3L, content, hashTag3));
+
+        content.saveHashTags(contentHashtagList);
+        return content;
     }
 }
