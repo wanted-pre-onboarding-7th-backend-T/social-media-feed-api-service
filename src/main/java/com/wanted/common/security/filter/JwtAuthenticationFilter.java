@@ -23,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.util.StringUtils;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -81,9 +82,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     private String toTrans(Collection<GrantedAuthority> list) {
-        StringBuilder sb = new StringBuilder();
-        list.forEach(data -> sb.append(data).append(","));
-        return sb.deleteCharAt(sb.length() - 1).toString();
+        return StringUtils.collectionToCommaDelimitedString(list);
     }
 
     private LoginDto toTransDto(HttpServletRequest request) throws IOException {

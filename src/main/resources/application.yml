@@ -24,7 +24,7 @@ logging:
     org.hibernate.type.descriptor.sql: trace
 
 jwt:
-  prefix: Bearer
+  prefix: 'Bearer '
   secret-key: ${JWT_SECRET_KEY}
   access-token-validity-in-seconds: 150
   refresh-token-validity-in-seconds: 259200
