@@ -11,6 +11,7 @@ import com.wanted.common.dto.ResponseDto;
 import com.wanted.content.dto.response.ContentLikeResponseDto;
 import com.wanted.content.dto.response.ContentShareResponseDto;
 import com.wanted.content.service.ContentService;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,24 @@ class ContentControllerTest {
             .andExpect(jsonPath("$.timeStamp").isString());
     }
 
+    @Disabled("현재 validation 예외 핸들러 없음")
+    @DisplayName("게시물 좋아요 테스트 : 실패 [게시물 식별자 0 이하]")
+    @Test
+    void increaseLikeCountFail() throws Exception {
+        //given
+        Long contentId = 0L;
+
+        //when
+        ResultActions perform = mockMvc.perform(
+            post("/api/contents/{contentId}/likes", contentId)
+                .accept(MediaType.APPLICATION_JSON));
+
+        //then
+        perform
+            .andExpect(status().is5xxServerError());
+        //TODO: validation 예외 핸들러 구현 후 작성
+    }
+
     @DisplayName("게시물 공유하기 테스트 : 성공")
     @Test
     void increaseShareCountSuccess() throws Exception {
@@ -84,5 +103,23 @@ class ContentControllerTest {
             .andExpect(jsonPath("$.code").isNumber())
             .andExpect(jsonPath("$.message").isString())
             .andExpect(jsonPath("$.timeStamp").isString());
+    }
+
+    @Disabled("현재 validation 예외 핸들러 없음")
+    @DisplayName("게시물 공유하기 테스트 : 실패 [게시물 식별자 0 이하]")
+    @Test
+    void increaseShareCountFail() throws Exception {
+        //given
+        Long contentId = 0L;
+
+        //when
+        ResultActions perform = mockMvc.perform(
+            post("/api/contents/{contentId}/share", contentId)
+                .accept(MediaType.APPLICATION_JSON));
+
+        //then
+        perform
+            .andExpect(status().is5xxServerError());
+        //TODO: validation 예외 핸들러 구현 후 작성
     }
 }
