@@ -25,6 +25,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
     private final JwtProperties jwtProperties;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
@@ -55,7 +56,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         return getAuthenticationTokenToHeader(request) != null;
     }
     private boolean checkAuthenticationBearerExist(HttpServletRequest request) {
-        return getAuthenticationTokenToHeader(request).startsWith("Bearer ");
+        return getAuthenticationTokenToHeader(request).startsWith(jwtProperties.getPrefix());
     }
 
     private void setAuthenticationToContext(HttpServletRequest request) {
@@ -69,7 +70,8 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     }
 
     private Principal createUserDetails(HttpServletRequest request) {
-        String token = getAuthenticationTokenToHeader(request).replace("Bearer ", "");
+        String token = getAuthenticationTokenToHeader(request).substring(
+                jwtProperties.getPrefixLength());
         return new Principal(jwtProvider.getClaims(token));
     }
 

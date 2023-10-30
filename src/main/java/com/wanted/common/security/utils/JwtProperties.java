@@ -21,4 +21,7 @@ public class JwtProperties {
     private Integer accessTokenValidityInSeconds;
     private Integer refreshTokenValidityInSeconds;
 
+    public int getPrefixLength() {
+        return prefix.length();
+    }
 }

@@ -69,7 +69,7 @@ public class SecurityConfig {
             jwtAuthenticationFilter.setAuthenticationFailureHandler(
                     authenticationFailureCustomHandler);
 
-            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(provider);
+            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(provider,properties);
 
             builder.addFilter(jwtAuthenticationFilter)
                     .addFilterBefore(jwtVerificationFilter, JwtAuthenticationFilter.class);
