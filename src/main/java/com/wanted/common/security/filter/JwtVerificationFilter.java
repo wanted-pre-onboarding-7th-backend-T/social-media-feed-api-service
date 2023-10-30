@@ -1,6 +1,7 @@
 package com.wanted.common.security.filter;
 
 import com.wanted.common.security.enums.AuthExceptionCode;
+import com.wanted.common.security.utils.JwtProperties;
 import com.wanted.common.security.utils.JwtProvider;
 import com.wanted.common.security.vo.Principal;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -23,7 +24,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtVerificationFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
-
+    private final JwtProperties jwtProperties;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
@@ -58,8 +59,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     }
 
     private void setAuthenticationToContext(HttpServletRequest request) {
-        Authentication authentication = createAuthenticatedToken(request);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        SecurityContextHolder.getContext().setAuthentication(createAuthenticatedToken(request));
     }
 
     private Authentication createAuthenticatedToken(HttpServletRequest request) {
