@@ -1,10 +1,8 @@
 package com.wanted.common.security.handler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wanted.common.security.enums.AuthExceptionCode;
 import com.wanted.common.security.exception.ErrorResponse;
-import jakarta.servlet.ServletException;
+import com.wanted.common.security.utils.ObjectMapperUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -20,11 +18,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AuthenticationEntryPointHandler implements AuthenticationEntryPoint {
 
-    private final ObjectMapper objectMapper;
+    private final ObjectMapperUtils objectMapperUtils;
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
-            AuthenticationException authException) throws IOException, ServletException {
+            AuthenticationException authException) throws IOException {
         sendError(response, getExceptionCodeByRequest(request));
     }
 
@@ -43,8 +41,8 @@ public class AuthenticationEntryPointHandler implements AuthenticationEntryPoint
         response.getWriter().write(getResponseData(authExceptionCode));
     }
 
-    private String getResponseData(AuthExceptionCode authExceptionCode) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(createErrorResponse(authExceptionCode));
+    private String getResponseData(AuthExceptionCode authExceptionCode){
+        return objectMapperUtils.toStringValue(createErrorResponse(authExceptionCode));
     }
 
     private ErrorResponse createErrorResponse(AuthExceptionCode authExceptionCode) {

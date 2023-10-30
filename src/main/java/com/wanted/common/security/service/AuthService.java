@@ -1,13 +1,12 @@
 package com.wanted.common.security.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wanted.common.exception.CommonException;
 import com.wanted.common.redis.repository.RedisRepository;
 import com.wanted.common.security.dto.UserInfo;
 import com.wanted.common.security.enums.AuthExceptionCode;
 import com.wanted.common.security.utils.JwtProperties;
 import com.wanted.common.security.utils.JwtProvider;
+import com.wanted.common.security.utils.ObjectMapperUtils;
 import com.wanted.user.entity.User;
 import com.wanted.user.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
@@ -28,7 +27,7 @@ public class AuthService {
     private final JwtProvider provider;
     private final JwtProperties properties;
     private final UserRepository userRepository;
-    private final ObjectMapper objectMapper;
+    private final ObjectMapperUtils objectMapperUtils;
 
     public void reissue(HttpServletRequest request, HttpServletResponse response) {
         UserInfo info = findUserInfo(findCookie(request));
@@ -53,7 +52,7 @@ public class AuthService {
     }
 
     private void saveUserInfoToRedis(String refresh, UserInfo info) {
-        redis.save(refresh, transString(info), provider.getRefreshTokenValidityInSeconds());
+        redis.save(refresh, objectMapperUtils.toStringValue(info), provider.getRefreshTokenValidityInSeconds());
     }
 
     private User validRefreshTokenSubject(UserInfo userInfo) {
@@ -66,7 +65,7 @@ public class AuthService {
     }
 
     private UserInfo findUserInfo(Cookie refreshCookie) {
-        return transUserInfo(refreshCookie);
+        return objectMapperUtils.toEntity(findAndDeleteToRedis(refreshCookie), UserInfo.class);
     }
 
     private String findAndDeleteToRedis(Cookie refreshCookie) {
@@ -107,21 +106,5 @@ public class AuthService {
         cookie.setPath("/api/auth/reissue");
         cookie.setSecure(true);
         return cookie;
-    }
-
-    private UserInfo transUserInfo(Cookie refreshCookie) {
-        try {
-            return objectMapper.readValue(findAndDeleteToRedis(refreshCookie), UserInfo.class);
-        } catch (JsonProcessingException e) {
-            throw new CommonException(HttpStatus.INTERNAL_SERVER_ERROR, "JSON 변환 에러");
-        }
-    }
-
-    private String transString(UserInfo info) {
-        try {
-            return objectMapper.writeValueAsString(info);
-        } catch (JsonProcessingException e) {
-            throw new CommonException(HttpStatus.INTERNAL_SERVER_ERROR, "JSON 변환 에러");
-        }
     }
 }

@@ -1,21 +1,18 @@
 package com.wanted.common.security.filter;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wanted.common.redis.repository.RedisRepository;
 import com.wanted.common.security.dto.LoginDto;
 import com.wanted.common.security.dto.UserInfo;
 import com.wanted.common.security.utils.JwtProperties;
 import com.wanted.common.security.utils.JwtProvider;
+import com.wanted.common.security.utils.ObjectMapperUtils;
 import com.wanted.common.security.vo.Principal;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,15 +27,15 @@ import org.springframework.util.StringUtils;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final JwtProvider jwtProvider;
-    private final ObjectMapper objectMapper;
+    private final ObjectMapperUtils objectMapper;
     private final RedisRepository repository;
     private final JwtProperties jwtProperties;
 
-    @SneakyThrows
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
             HttpServletResponse response) throws AuthenticationException {
-        var authenticationToken = createAuthenticationToken(toTransDto(request));
+        LoginDto requestData = objectMapper.toEntity(request, LoginDto.class);
+        var authenticationToken = createAuthenticationToken(requestData);
         return getAuthenticationManager().authenticate(authenticationToken);
     }
 
@@ -46,7 +43,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request,
             HttpServletResponse response,
             FilterChain chain,
-            Authentication authResult) throws JsonProcessingException {
+            Authentication authResult) {
         Principal principal = (Principal) authResult.getPrincipal();
 
         String accessToken =
@@ -54,13 +51,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                         toTrans(principal.getAuthorities()));
         String refreshToken = jwtProvider.generateRefreshToken(principal.getUsername());
 
-        repository.save(refreshToken, transSaveData(principal), jwtProperties.getRefreshTokenValidityInSeconds());
-        response.setHeader(HttpHeaders.AUTHORIZATION, jwtProperties.getPrefix() + " " + accessToken);
+        repository.save(refreshToken, objectMapper.toStringValue(createUserInfo(principal)),
+                jwtProperties.getRefreshTokenValidityInSeconds());
+        response.setHeader(HttpHeaders.AUTHORIZATION,
+                jwtProperties.getPrefix() + " " + accessToken);
         response.addCookie(createCookie(refreshToken));
-    }
-
-    private String transSaveData(Principal principal) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(createUserInfo(principal));
     }
 
     private UserInfo createUserInfo(Principal principal) {
@@ -85,7 +80,4 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         return StringUtils.collectionToCommaDelimitedString(list);
     }
 
-    private LoginDto toTransDto(HttpServletRequest request) throws IOException {
-        return objectMapper.readValue(request.getInputStream(), LoginDto.class);
-    }
 }

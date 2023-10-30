@@ -1,6 +1,5 @@
 package com.wanted.common.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wanted.common.redis.repository.RedisRepository;
 import com.wanted.common.security.filter.JwtAuthenticationFilter;
 import com.wanted.common.security.filter.JwtVerificationFilter;
@@ -9,6 +8,7 @@ import com.wanted.common.security.handler.AuthenticationFailureCustomHandler;
 import com.wanted.common.security.handler.LogoutSuccessCustomHandler;
 import com.wanted.common.security.utils.JwtProperties;
 import com.wanted.common.security.utils.JwtProvider;
+import com.wanted.common.security.utils.ObjectMapperUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +30,7 @@ public class SecurityConfig {
     private final AuthenticationFailureCustomHandler authenticationFailureCustomHandler;
     private final JwtProvider provider;
     private final JwtProperties properties;
-    private final ObjectMapper objectMapper;
+    private final ObjectMapperUtils objectMapperUtils;
     private final RedisRepository repository;
 
     @Bean
@@ -63,7 +63,7 @@ public class SecurityConfig {
                     AuthenticationManager.class);
 
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(provider,
-                    objectMapper, repository, properties);
+                    objectMapperUtils, repository, properties);
             jwtAuthenticationFilter.setFilterProcessesUrl("/api/login");
             jwtAuthenticationFilter.setAuthenticationManager(authenticationManager);
             jwtAuthenticationFilter.setAuthenticationFailureHandler(

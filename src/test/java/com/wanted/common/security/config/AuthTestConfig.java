@@ -9,6 +9,7 @@ import com.wanted.common.security.service.AuthService;
 import com.wanted.common.security.service.UserDetailsServiceImpl;
 import com.wanted.common.security.utils.JwtProperties;
 import com.wanted.common.security.utils.JwtProvider;
+import com.wanted.common.security.utils.ObjectMapperUtils;
 import com.wanted.user.mock.UserMock;
 import com.wanted.user.repository.UserRepository;
 import com.wanted.user.service.UserService;
@@ -39,12 +40,12 @@ public class AuthTestConfig {
 
     @Bean
     public AuthenticationFailureCustomHandler authenticationFailureCustomHandler() {
-        return new AuthenticationFailureCustomHandler(objectMapper());
+        return new AuthenticationFailureCustomHandler(objectMapperUtils());
     }
 
     @Bean
     public AuthenticationEntryPointHandler authenticationEntryPointHandler() {
-        return new AuthenticationEntryPointHandler(objectMapper());
+        return new AuthenticationEntryPointHandler(objectMapperUtils());
     }
 
     @Bean
@@ -64,7 +65,12 @@ public class AuthTestConfig {
 
     @Bean
     public AuthService authService() {
-        return new AuthService(redisRepository(), jwtProvider(),jwtProperties(),userRepository(), objectMapper());
+        return new AuthService(redisRepository(), jwtProvider(),jwtProperties(),userRepository(), objectMapperUtils());
+    }
+
+    @Bean
+    public ObjectMapperUtils objectMapperUtils() {
+        return new ObjectMapperUtils(objectMapper());
     }
 
     @Bean

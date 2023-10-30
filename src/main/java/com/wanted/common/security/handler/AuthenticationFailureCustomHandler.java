@@ -1,9 +1,8 @@
 package com.wanted.common.security.handler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wanted.common.security.enums.AuthExceptionCode;
 import com.wanted.common.security.exception.ErrorResponse;
+import com.wanted.common.security.utils.ObjectMapperUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,7 +20,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AuthenticationFailureCustomHandler implements AuthenticationFailureHandler {
 
-    private final ObjectMapper objectMapper;
+    private final ObjectMapperUtils objectMapperUtils;
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
@@ -33,7 +32,11 @@ public class AuthenticationFailureCustomHandler implements AuthenticationFailure
 
     private void sendErrorResponse(HttpServletResponse response) throws IOException {
         setResponseHeader(response);
-        response.getWriter().write(getResponseData(createErrorResponse()));
+        response.getWriter().write(getResponseData());
+    }
+
+    private String getResponseData() {
+        return objectMapperUtils.toStringValue(createErrorResponse());
     }
 
     private void setResponseHeader(HttpServletResponse response) {
@@ -45,9 +48,5 @@ public class AuthenticationFailureCustomHandler implements AuthenticationFailure
     private ErrorResponse createErrorResponse() {
         return ErrorResponse.of(AuthExceptionCode.UNAUTHENTICATED.getHttpStatus(),
                 AuthExceptionCode.UNAUTHENTICATED.getMessage());
-    }
-
-    private String getResponseData(ErrorResponse errorResponse) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(errorResponse);
     }
 }
