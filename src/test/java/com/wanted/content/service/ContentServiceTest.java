@@ -20,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 
 @ExtendWith(MockitoExtension.class)
 class ContentServiceTest {
@@ -60,6 +61,8 @@ class ContentServiceTest {
 
         //when, then
         assertThatThrownBy(() -> contentService.getContent(1L))
-            .isInstanceOf(CommonException.class);
+            .isInstanceOf(CommonException.class)
+            .extracting("httpStatus", "message")
+            .containsExactly(HttpStatus.NOT_FOUND, "해당 게시물이 존재하지 않습니다.");
     }
 }
