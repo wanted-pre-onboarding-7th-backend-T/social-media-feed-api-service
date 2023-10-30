@@ -19,17 +19,13 @@ public class ContentService {
 
     @Transactional
     public ResponseDto<ContentsDetailsResponseDto> findContentDetails(Long id) {
-        if (contentRepository.findById(id).isPresent()) {
-            contentRepository.increasingViewCount(id);
-            Content content = contentRepository.findById(id).get();
-            List<String> hashTags = content.getHashtags().stream()
-                .map(contentHashtag -> contentHashtag.getHashTag().getName()).toList();
-            ContentsDetailsResponseDto contentsDetailsResponseDto =
-                ContentsDetailsResponseDto.toDto(content, hashTags);
-            return new ResponseDto<>(200, "성공적으로 게시물을 가져왔습니다.", contentsDetailsResponseDto);
-        } else {
-            throw new CommonException(HttpStatus.NOT_FOUND, "해당 게시물이 존재하지 않습니다..");
-        }
+        Content content = contentRepository.findById(id)
+            .orElseThrow(() -> new CommonException(HttpStatus.NOT_FOUND, "해당 게시물이 존재하지 않습니다.."));
+        content.updateViewCount(content.getViewCount() + 1);
+        List<String> hashTags = content.getHashtags().stream()
+            .map(contentHashtag -> contentHashtag.getHashTag().getName()).toList();
+        ContentsDetailsResponseDto contentsDetailsResponseDto =
+            ContentsDetailsResponseDto.toDto(content, hashTags);
+        return new ResponseDto<>(200, "성공적으로 게시물을 가져왔습니다.", contentsDetailsResponseDto);
     }
-
 }

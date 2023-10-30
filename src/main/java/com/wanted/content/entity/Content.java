@@ -57,4 +57,7 @@ public class Content extends BaseTime {
     @Column(name = "share_count", nullable = false)
     private Long shareCount;
 
+    public void updateViewCount(Long viewCount) {
+        this.viewCount = viewCount;
+    }
 }
