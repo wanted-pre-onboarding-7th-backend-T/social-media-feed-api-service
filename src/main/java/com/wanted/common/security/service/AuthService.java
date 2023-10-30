@@ -6,6 +6,7 @@ import com.wanted.common.exception.CommonException;
 import com.wanted.common.redis.repository.RedisRepository;
 import com.wanted.common.security.dto.UserInfo;
 import com.wanted.common.security.enums.AuthExceptionCode;
+import com.wanted.common.security.utils.JwtProperties;
 import com.wanted.common.security.utils.JwtProvider;
 import com.wanted.user.entity.User;
 import com.wanted.user.repository.UserRepository;
@@ -25,6 +26,7 @@ public class AuthService {
 
     private final RedisRepository redis;
     private final JwtProvider provider;
+    private final JwtProperties properties;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
 
@@ -32,9 +34,8 @@ public class AuthService {
         UserInfo info = findUserInfo(findCookie(request));
         User findUser = validRefreshTokenSubject(info);
 
-        String refresh = provider.generateRefreshToken(findUser.getUserName());
-        String access = provider.generateAccessToken(findUser.getUserName(), findUser.getId(),
-                info.getAuthorities());
+        String refresh = getRefreshToken(findUser);
+        String access = getAccessToken(findUser, info);
 
         saveUserInfoToRedis(refresh, info);
 
@@ -42,8 +43,17 @@ public class AuthService {
         response.addCookie(createCookie(refresh));
     }
 
+    private String getRefreshToken(User findUser) {
+        return provider.generateRefreshToken(findUser.getUserName());
+    }
+
+    private String getAccessToken(User findUser, UserInfo info) {
+        return properties.getPrefix() + provider.generateAccessToken(findUser.getUserName(),
+                findUser.getId(), info.getAuthorities());
+    }
+
     private void saveUserInfoToRedis(String refresh, UserInfo info) {
-            redis.save(refresh, transString(info), provider.getRefreshTokenValidityInSeconds());
+        redis.save(refresh, transString(info), provider.getRefreshTokenValidityInSeconds());
     }
 
     private User validRefreshTokenSubject(UserInfo userInfo) {
@@ -103,7 +113,7 @@ public class AuthService {
         try {
             return objectMapper.readValue(findAndDeleteToRedis(refreshCookie), UserInfo.class);
         } catch (JsonProcessingException e) {
-            throw new CommonException(HttpStatus.INTERNAL_SERVER_ERROR,"JSON 변환 에러");
+            throw new CommonException(HttpStatus.INTERNAL_SERVER_ERROR, "JSON 변환 에러");
         }
     }
 
@@ -111,7 +121,7 @@ public class AuthService {
         try {
             return objectMapper.writeValueAsString(info);
         } catch (JsonProcessingException e) {
-            throw new CommonException(HttpStatus.INTERNAL_SERVER_ERROR,"JSON 변환 에러");
+            throw new CommonException(HttpStatus.INTERNAL_SERVER_ERROR, "JSON 변환 에러");
         }
     }
 }

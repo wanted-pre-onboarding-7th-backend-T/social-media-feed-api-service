@@ -64,7 +64,7 @@ public class AuthTestConfig {
 
     @Bean
     public AuthService authService() {
-        return new AuthService(redisRepository(), jwtProvider(), userRepository(), objectMapper());
+        return new AuthService(redisRepository(), jwtProvider(),jwtProperties(),userRepository(), objectMapper());
     }
 
     @Bean
