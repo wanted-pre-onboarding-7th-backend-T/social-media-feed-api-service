@@ -1,10 +1,13 @@
 package com.wanted.content.controller;
 
 import com.wanted.common.dto.ResponseDto;
+import com.wanted.content.dto.ContentSearchResponseDto;
 import com.wanted.content.dto.ContentsDetailsResponseDto;
+import com.wanted.content.dto.ContentSearchRequestDto;
 import com.wanted.content.service.ContentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,5 +22,10 @@ public class ContentController {
     @GetMapping("/{id}")
     public ResponseDto<ContentsDetailsResponseDto> getContentsDetails(@PathVariable Long id) {
         return contentService.findContentDetails(id);
+    }
+
+    @GetMapping
+    public ContentSearchResponseDto getContents(@ModelAttribute ContentSearchRequestDto searchRequest) {
+        return contentService.findContents(searchRequest);
     }
 }
