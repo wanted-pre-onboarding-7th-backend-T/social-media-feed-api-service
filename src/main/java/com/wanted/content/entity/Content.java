@@ -2,14 +2,19 @@ package com.wanted.content.entity;
 
 import com.wanted.common.BaseTime;
 import com.wanted.content.enums.SnsType;
+import com.wanted.hashtag.entity.ContentHashtag;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,6 +46,9 @@ public class Content extends BaseTime {
     @Column(name = "content", columnDefinition = "TEXT", nullable = false)
     private String content;
 
+    @OneToMany(mappedBy = "content", fetch = FetchType.LAZY)
+    private List<ContentHashtag> hashtags = new ArrayList<>();
+
     @Column(name = "view_count", nullable = false)
     private Long viewCount;
 
@@ -49,6 +57,14 @@ public class Content extends BaseTime {
 
     @Column(name = "share_count", nullable = false)
     private Long shareCount;
+
+    public void updateViewCount(Long viewCount) {
+        this.viewCount = viewCount;
+    }
+
+    public void saveHashTags(List<ContentHashtag> contentHashtags) {
+        this.hashtags = contentHashtags;
+    }
 
     public void updateLikeCount(Long likeCount) {
         this.likeCount = likeCount;
