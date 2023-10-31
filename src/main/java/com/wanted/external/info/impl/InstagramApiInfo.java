@@ -1,5 +1,7 @@
-package com.wanted.external.info;
+package com.wanted.external.info.impl;
 
+import com.wanted.external.info.ApiSpec;
+import com.wanted.external.info.SnsApiInfo;
 import java.util.Optional;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,5 +22,10 @@ public class InstagramApiInfo implements SnsApiInfo {
     @Override
     public Optional<ApiSpec> getLikeApiSpec(String contentSnsId) {
         return Optional.of(new ApiSpec(HttpMethod.POST, "/likes/" + contentSnsId, keys));
+    }
+
+    @Override
+    public Optional<ApiSpec> getShareApiSpec(String contentSnsId) {
+        return Optional.of(new ApiSpec(HttpMethod.POST, "/share/" + contentSnsId, keys));
     }
 }

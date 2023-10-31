@@ -3,6 +3,7 @@ package com.wanted.content.service;
 import com.wanted.common.dto.ResponseDto;
 import com.wanted.common.exception.CommonException;
 import com.wanted.content.dto.response.ContentLikeResponseDto;
+import com.wanted.content.dto.response.ContentShareResponseDto;
 import com.wanted.content.entity.Content;
 import com.wanted.content.repository.ContentRepository;
 import com.wanted.external.service.SnsApiService;
@@ -23,8 +24,17 @@ public class ContentService {
         Content content = getContent(contentId);
         Long increasedLikeCount = snsApiService.callLikeApi(content);
         content.updateLikeCount(increasedLikeCount);
-        return new ResponseDto<>(200, HttpStatus.OK.name(),
+        return new ResponseDto<>(200, "성공적으로 게시물을 좋아요 하였습니다.",
             new ContentLikeResponseDto(contentId, increasedLikeCount));
+    }
+
+    @Transactional
+    public ResponseDto<ContentShareResponseDto> increaseShareCount(Long contentId) {
+        Content content = getContent(contentId);
+        Long increasedShareCount = snsApiService.callShareApi(content);
+        content.updateShareCount(increasedShareCount);
+        return new ResponseDto<>(200, "성공적으로 게시물을 공유하였습니다.",
+            new ContentShareResponseDto(contentId, increasedShareCount));
     }
 
     @Transactional(readOnly = true)

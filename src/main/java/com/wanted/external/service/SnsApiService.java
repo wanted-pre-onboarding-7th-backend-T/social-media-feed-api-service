@@ -35,4 +35,23 @@ public class SnsApiService {
             .onErrorReturn(content.getLikeCount())
             .block(); //Blocking & Synchronous
     }
+
+    public Long callShareApi(Content content) {
+        String contentSnsId = content.getContentSnsId();
+        SnsType type = content.getType();
+        SnsApiInfo snsApiInfo = snsApiInfoFactory.getSnsApiInfo(type);
+        ApiSpec shareApiSpec = snsApiInfo.getShareApiSpec(contentSnsId)
+            .orElseThrow(() -> new CommonException(HttpStatus.BAD_REQUEST, "해당 API가 존재하지 않습니다."));
+
+        //모든 외부 API 증가된 공유 개수 반환한다고 가정
+        return WebClient.create(snsApiInfo.getEndpoint())
+            .method(shareApiSpec.getMethod())
+            .uri(uriBuilder -> uriBuilder.path(shareApiSpec.getPath())
+                .queryParams(shareApiSpec.getQueryParams())
+                .build())
+            .retrieve()
+            .bodyToMono(Long.class)
+            .onErrorReturn(content.getShareCount())
+            .block(); //Blocking & Synchronous
+    }
 }

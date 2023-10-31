@@ -2,6 +2,10 @@ package com.wanted.external.info;
 
 import com.wanted.common.exception.CommonException;
 import com.wanted.content.enums.SnsType;
+import com.wanted.external.info.impl.FacebookApiInfo;
+import com.wanted.external.info.impl.InstagramApiInfo;
+import com.wanted.external.info.impl.ThreadApiInfo;
+import com.wanted.external.info.impl.TwitterApiInfo;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
