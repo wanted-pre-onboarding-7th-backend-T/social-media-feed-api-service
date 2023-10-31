@@ -50,4 +50,7 @@ public class Content extends BaseTime {
     @Column(name = "share_count", nullable = false)
     private Long shareCount;
 
+    public void updateLikeCount(Long likeCount) {
+        this.likeCount = likeCount;
+    }
 }
