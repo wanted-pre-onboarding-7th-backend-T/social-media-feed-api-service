@@ -65,4 +65,12 @@ public class Content extends BaseTime {
     public void saveHashTags(List<ContentHashtag> contentHashtags) {
         this.hashtags = contentHashtags;
     }
+
+    public void updateLikeCount(Long likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public void updateShareCount(Long shareCount) {
+        this.shareCount = shareCount;
+    }
 }

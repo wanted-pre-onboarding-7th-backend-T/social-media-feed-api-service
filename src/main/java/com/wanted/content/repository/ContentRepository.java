@@ -50,4 +50,5 @@ public interface ContentRepository extends JpaRepository<Content, Long> {
         where c.title like %:search% or c.content like %:search%
     """)
     Page<Content> findByTitleOrContentContainsQuery(String search, Pageable pageable);
+
 }
